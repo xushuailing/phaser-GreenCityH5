@@ -1,7 +1,7 @@
 ﻿var c = {
     ShowHide: function(obj, boolean, time, callBack) {
         // 显示隐藏
-        if (!time) time = 1000;
+        if (!time) time = 500;
         if (!callBack) callBack = Function;
         if (boolean) {
             game.add
@@ -67,6 +67,7 @@ var mainState = function(game) {
     };
     this.create = function() {
         main1();
+
         function main1() {
             var img01 = game.add.image(0, 0, 'img01');
             var img02 = c.addImg(0, 0, 'img02');
@@ -97,9 +98,9 @@ var mainState = function(game) {
                 text3.addColor('#05cfaf', 11);
                 c.ShowHide(img02, true, '', function() {
                     img01.alpha = 0;
-                    c.ShowHide(text1, true, '', function() {
-                        c.ShowHide(text2, true, '', function() {
-                            c.ShowHide(text3, true, '', function() {
+                    c.ShowHide(text1, true, 750, function() {
+                        c.ShowHide(text2, true, 750, function() {
+                            c.ShowHide(text3, true, 750, function() {
                                 setTimeout(function() {
                                     var groupText = game.add.group();
                                     groupText.add(text1);
@@ -108,11 +109,11 @@ var mainState = function(game) {
                                     c.ShowHide(groupText, false, '');
                                     game.add
                                         .tween(img02.scale)
-                                        .to({x: 1, y: 1}, 2000, 'Linear', true)
+                                        .to({x: 1, y: 1}, 1000, 'Linear', true)
                                         .onComplete.add(function() {
                                             main2();
                                         });
-                                }, 2000);
+                                }, 1500);
                             });
                         });
                     });
@@ -128,61 +129,49 @@ var mainState = function(game) {
             door.animations.add('door', [0, 1, 2, 1]);
             door.play('door', 3, true);
             setTimeout(function() {
-                c.ShowHide(img04, true, '', function() {
-                    var text1 = game.add.text(
-                        174,
-                        395,
-                        '开卧室门时，\n门把手\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t，\n使用不便。',
-                        {
-                            font: '26px Arial',
-                            fill: '#000',
-                            fontWeight: '400'
-                        }
-                    );
-                    var text2 = game.add.text(258, 442, '松动脱落', {
-                        font: '32px Arial',
-                        fill: '#ea3862',
+                img04.alpha = 1;
+                // c.ShowHide(img04, true, 0, function() {
+                var text1 = game.add.text(
+                    174,
+                    395,
+                    '开卧室门时，\n门把手\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t，\n使用不便。',
+                    {
+                        font: '26px Arial',
+                        fill: '#000',
                         fontWeight: '400'
-                    });
-                    text1.lineSpacing = 15;
-                    text1.alpha = 0;
-                    text2.alpha = 0;
-                    c.ShowHide(text1, true, '');
-                    c.ShowHide(text2, true, '', function() {
-                        var sum = 0;
-                        var time = setInterval(function() {
-                            if (sum % 2 == 0) {
-                                img05.alpha = 1;
-                            } else {
-                                img05.alpha = 0;
-                            }
-                            if (sum == 4) {
-                                clearInterval(time);
-                                setTimeout(function() {
-                                    main3();
-                                }, 1000);
-                                return;
-                            }
-                            sum++;
-                        }, 200);
+                    }
+                );
+                var text2 = game.add.text(258, 442, '松动脱落', {
+                    font: '32px Arial',
+                    fill: '#ea3862',
+                    fontWeight: '400'
+                });
+                text1.lineSpacing = 15;
+                text1.alpha = 0;
+                text2.alpha = 0;
+                c.ShowHide(text1, true, '');
+                c.ShowHide(text2, true, '', function() {
+                    c.twinkle(img05, function() {
+                        main3();
                     });
                 });
-            }, 2000);
+                // });
+            }, 500);
         }
         function main3() {
             var lamp;
             var img06 = c.addImg(0, 0, 'img06');
             var img07 = c.addImg(224, 408, 'img07');
-            var img08 = c.addImg(656, 413, 'img08');
             c.ShowHide(img06, true, '', function() {
                 setTimeout(function() {
                     lamp = game.add.sprite(0, 0, 'lamp');
-                    lamp.animations.add('lamp', [0, 2, 1, 2, 1, 2, 0, 0, 0]);
+                    lamp.animations.add('lamp', [0, 2, 1, 2, 1, 2, 0, 0]);
                     lamp
-                        .play('lamp', 4, false, true)
+                        .play('lamp', 5, false, true)
                         .onComplete.add(function() {
-                            setTimeout(function() {
-                                c.ShowHide(img07, true, 1000, function() {
+                            // setTimeout(function() {
+                                img07.alpha = 1
+                                // c.ShowHide(img07, true, 1000, function() {
                                     var text1 = game.add.text(
                                         300,
                                         502,
@@ -220,11 +209,12 @@ var mainState = function(game) {
                                     c.ShowHide(text1, true, '');
                                     c.ShowHide(text2, true, '');
                                     c.ShowHide(text3, true, '');
+                                    var img08 = c.addImg(656, 413, 'img08');
                                     c.twinkle(img08, function() {
                                         main4();
                                     });
-                                });
-                            }, 500);
+                                // });
+                            // }, 0);
                         });
                 }, 500);
             });
@@ -234,32 +224,25 @@ var mainState = function(game) {
             c.ShowHide(img09, true, '', function() {
                 var cabinet = game.add.sprite(287, 211, 'cabinet');
                 cabinet.animations.add('cab', [0, 1, 2, 1, 2, 3, 4, 5, 4, 5]);
-                cabinet.play('cab', 4, false).onComplete.add(function() {
-                    var img10 = c.addImg(12, 450, 'img10');
-                    c.ShowHide(img10, true, 1000, function() {
-                        var text1 = game.add.text(76, 537, '拿衣服时，橱柜门', {
-                            font: '26px Arial',
-                            fill: '#000',
-                            fontWeight: '400'
-                        });
-                        var text2 = game.add.text(
-                            74,
-                            585,
-                            '错位松垮、推拉不畅。',
-                            {
-                                font: '36px Arial',
-                                fill: '#ea3862',
-                                fontWeight: '400'
-                            }
-                        );
-                        text1.alpha = 0;
-                        text2.alpha = 0;
-                        c.ShowHide(text1, true, '');
-                        c.ShowHide(text2, true, '', function() {
-                            var img08 = c.addImg(408, 422, 'img08');
-                            c.twinkle(img08, function() {
-                                main5();
-                            });
+                cabinet.play('cab', 6, false).onComplete.add(function() {
+                    var img10 = game.add.image(12, 450, 'img10');
+                    var text1 = game.add.text(76, 537, '拿衣服时，橱柜门', {
+                        font: '26px Arial',
+                        fill: '#000',
+                        fontWeight: '400'
+                    });
+                    var text2 = game.add.text(74, 585, '错位松垮、推拉不畅。', {
+                        font: '36px Arial',
+                        fill: '#ea3862',
+                        fontWeight: '400'
+                    });
+                    text1.alpha = 0;
+                    text2.alpha = 0;
+                    c.ShowHide(text1, true, '');
+                    c.ShowHide(text2, true, '', function() {
+                        var img08 = c.addImg(408, 422, 'img08');
+                        c.twinkle(img08, function() {
+                            main5();
                         });
                     });
                 });
@@ -271,39 +254,37 @@ var mainState = function(game) {
                 var water = game.add.sprite(183, 793, 'water');
                 water.animations.add('water', [0, 1, 2]);
                 water.play('water', 3, true);
-                var img12 = c.addImg(60, 343, 'img12');
-                c.ShowHide(img12, true, '', function() {
-                    var text1 = game.add.text(
-                        150,
-                        407,
-                        '用水时，\n水龙头出水\n刺鼻难闻偶尔还流出',
-                        {
-                            font: '26px Arial',
-                            fill: '#000',
-                            fontWeight: '400'
-                        }
-                    );
-                    text1.lineSpacing = 15;
-                    var text2 = game.add.text(280, 451, '浑浊发黄，', {
-                        font: '36px Arial',
-                        fill: '#ea3862',
+                var img12 = game.add.image(60, 343, 'img12');
+                var text1 = game.add.text(
+                    150,
+                    407,
+                    '用水时，\n水龙头出水\n刺鼻难闻偶尔还流出',
+                    {
+                        font: '26px Arial',
+                        fill: '#000',
                         fontWeight: '400'
-                    });
-                    var text3 = game.add.text(152, 554, '不明异物！', {
-                        font: '36px Arial',
-                        fill: '#ea3862',
-                        fontWeight: '400'
-                    });
-                    text1.alpha = 0;
-                    text2.alpha = 0;
-                    text3.alpha = 0;
-                    c.ShowHide(text1, true, '');
-                    c.ShowHide(text2, true, '');
-                    c.ShowHide(text3, true, '', function() {
-                        var img08 = c.addImg(408, 354, 'img08');
-                        c.twinkle(img08, function() {
-                            main6();
-                        });
+                    }
+                );
+                text1.lineSpacing = 15;
+                var text2 = game.add.text(280, 451, '浑浊发黄，', {
+                    font: '36px Arial',
+                    fill: '#ea3862',
+                    fontWeight: '400'
+                });
+                var text3 = game.add.text(152, 554, '不明异物！', {
+                    font: '36px Arial',
+                    fill: '#ea3862',
+                    fontWeight: '400'
+                });
+                text1.alpha = 0;
+                text2.alpha = 0;
+                text3.alpha = 0;
+                c.ShowHide(text1, true, '');
+                c.ShowHide(text2, true, '');
+                c.ShowHide(text3, true, '', function() {
+                    var img08 = c.addImg(408, 354, 'img08');
+                    c.twinkle(img08, function() {
+                        main6();
                     });
                 });
             });
@@ -313,33 +294,31 @@ var mainState = function(game) {
             c.ShowHide(img13, true, '', function() {
                 var pond = game.add.sprite(0, 697, 'pond');
                 pond.animations.add('pond', [0, 1, 2, 3, 4, 5, 6, 7]);
-                pond.play('pond', 3, false).onComplete.add(function() {
-                    var img04 = c.addImg(4, 167, 'img04');
-                    c.ShowHide(img04, true, '', function() {
-                        var text1 = game.add.text(
-                            90,
-                            301,
-                            '关水后，台盆\n如沙漏，堵塞严重\n让人着急抓狂！',
-                            {
-                                font: '26px Arial',
-                                fill: '#000',
-                                fontWeight: '400'
-                            }
-                        );
-                        text1.lineSpacing = 15;
-                        var text2 = game.add.text(246, 291, '下水慢', {
-                            font: '36px Arial',
-                            fill: '#ea3862',
+                pond.play('pond', 5, false).onComplete.add(function() {
+                    var img04 = game.add.image(4, 167, 'img04');
+                    var text1 = game.add.text(
+                        90,
+                        301,
+                        '关水后，台盆\n如沙漏，堵塞严重\n让人着急抓狂！',
+                        {
+                            font: '26px Arial',
+                            fill: '#000',
                             fontWeight: '400'
-                        });
-                        text1.alpha = 0;
-                        text2.alpha = 0;
-                        c.ShowHide(text1, true, '');
-                        c.ShowHide(text2, true, '', function() {
-                            var img08 = c.addImg(416, 240, 'img08');
-                            c.twinkle(img08, function() {
-                                main7();
-                            });
+                        }
+                    );
+                    text1.lineSpacing = 15;
+                    var text2 = game.add.text(246, 291, '下水慢', {
+                        font: '36px Arial',
+                        fill: '#ea3862',
+                        fontWeight: '400'
+                    });
+                    text1.alpha = 0;
+                    text2.alpha = 0;
+                    c.ShowHide(text1, true, '');
+                    c.ShowHide(text2, true, '', function() {
+                        var img08 = c.addImg(416, 240, 'img08');
+                        c.twinkle(img08, function() {
+                            main7();
                         });
                     });
                 });
@@ -356,11 +335,11 @@ var mainState = function(game) {
             var icon6 = c.addImg(26, 301, 'icon6');
             var icon7 = c.addImg(166, 474, 'icon7');
             c.ShowHide(img14, true, '', function() {
-                c.ShowHide(icon1, true, 700, function() {
-                    c.ShowHide(icon2, true, 700, function() {
-                        c.ShowHide(icon3, true, 700, function() {
-                            c.ShowHide(icon4, true, 700, function() {
-                                c.ShowHide(icon5, true, 700, function() {
+                c.ShowHide(icon1, true, 400, function() {
+                    c.ShowHide(icon2, true, 400, function() {
+                        c.ShowHide(icon3, true, 400, function() {
+                            c.ShowHide(icon4, true, 400, function() {
+                                c.ShowHide(icon5, true, 400, function() {
                                     c.ShowHide(icon6, true, '', function() {
                                         var text1 = game.add.text(
                                             172,
@@ -376,7 +355,7 @@ var mainState = function(game) {
                                         c.ShowHide(icon7, true, '');
                                         c.ShowHide(text1, true, '', function() {
                                             setTimeout(function() {
-                                                $('img').fadeIn(2000);
+                                                $('img').fadeIn(1000);
                                             }, 2000);
                                         });
                                     });
